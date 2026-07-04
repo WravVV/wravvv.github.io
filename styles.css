@@ -1,0 +1,1369 @@
+/* ============================================================
+   THE BLUEPRINT OF INTELLIGENCE — PHASE 01
+   Cyber-wireframe design system
+   ============================================================ */
+
+:root {
+  --ink:      #0A0A0C;
+  --inkraise: #0E0F12;
+  --term:     #00FF66;
+  --tactical: #2a774a;   /* raised from #1A5F36 for legible structural/label text */
+  --fog:      #7DBA9A;
+  --ash:      #648175;  /* raised from #3A4A41 for readable faint/secondary text */
+  --glow:     0 0 8px rgba(0, 255, 102, 0.35);
+}
+
+/* ---- Base -------------------------------------------------- */
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   LOADING SCREEN — AI chatbot prompt page
+   ============================================================ */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(to right,  rgba(0,255,102,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,255,102,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: -1px -1px;
+  cursor: pointer;
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.7, 0, 0.3, 1),
+    visibility 0s linear 0.7s;
+}
+.loader.is-leaving {
+  opacity: 0;
+  transform: translateY(-42vh);
+  visibility: hidden;
+}
+.loader-inner {
+  width: min(680px, 90vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+.loader-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+}
+.loader-title {
+  margin: 0;
+  font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: var(--term);
+  text-shadow: 0 0 18px rgba(0,255,102,0.35);
+  letter-spacing: 0.02em;
+}
+.loader-chatbox {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--tactical);
+  background: rgba(0,255,102,0.02);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,102,0.04),
+    0 0 24px rgba(0,0,0,0.6);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  min-height: 54px;
+}
+/* schematic corner brackets */
+.loader-chatbox::before,
+.loader-chatbox::after {
+  content: "";
+  position: absolute;
+  width: 10px; height: 10px;
+  border: 1px solid var(--term);
+  box-shadow: var(--glow);
+  pointer-events: none;
+}
+.loader-chatbox::before { top: -1px; left: -1px;  border-right: 0; border-bottom: 0; }
+.loader-chatbox::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.loader-prompt { color: var(--term); }
+.loader-text { color: var(--fog); white-space: pre; }
+.loader-cursor {
+  display: inline-block;
+  width: 9px; height: 1.05em;
+  background: var(--term);
+  vertical-align: -2px;
+  margin-left: 1px;
+  box-shadow: 0 0 8px rgba(0,255,102,0.7);
+  animation: loader-blink 1s steps(1) infinite;
+}
+.loader-cursor.idle { animation: none; opacity: 0.45; }
+@keyframes loader-blink { 50% { opacity: 0; } }
+
+.loader-placeholder {
+  position: absolute;
+  left: 2.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ash);
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.loader-placeholder.is-hidden { opacity: 0; }
+
+.loader-hint {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.loader-hint.is-shown { opacity: 1; }
+.loader-hint .key {
+  display: inline-block;
+  border: 1px solid var(--tactical);
+  padding: 1px 6px;
+  color: var(--term);
+  margin: 0 0.2rem;
+}
+
+/* ---- Background grid (glowing dark-green) ------------------ */
+.blueprint-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--ink);
+  background-image:
+    /* fine grid */
+    linear-gradient(to right,  rgba(0,255,102,0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,255,102,0.045) 1px, transparent 1px),
+    /* coarse grid (major) */
+    linear-gradient(to right,  rgba(0,255,102,0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,255,102,0.09) 1px, transparent 1px);
+  background-size:
+    40px 40px, 40px 40px,
+    200px 200px, 200px 200px;
+  background-position: -1px -1px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, #000 55%, transparent 100%);
+}
+
+/* ---- Faint neural network (background canvas) -------------- */
+/* Sits above the blueprint grid but below the atmosphere + all
+   content. Kept very dim so it reads as ambient texture, never
+   competing with the schematic foreground. */
+.neural-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
+/* subtle scanline + vignette atmosphere */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.18) 3px,
+      rgba(0,0,0,0) 4px
+    ),
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 60%, rgba(0,0,0,0.6) 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+/* ---- Corner crosshairs (fixed to viewport) ----------------- */
+.crosshair {
+  position: fixed;
+  z-index: 30;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+.crosshair::before,
+.crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--term);
+  box-shadow: var(--glow);
+}
+.crosshair::before { width: 100%; height: 1px; top: 50%; left: 0; }      /* horizontal */
+.crosshair::after  { width: 1px; height: 100%; left: 50%; top: 0; }       /* vertical   */
+.crosshair-tl { top: 10px;    left: 10px;    }
+.crosshair-tr { top: 10px;    right: 10px;   }
+.crosshair-bl { bottom: 10px; left: 10px;    }
+.crosshair-br { bottom: 10px; right: 10px;   }
+
+/* ---- Coordinate tick bars (top + bottom) ------------------- */
+.coord-bar {
+  position: fixed;
+  z-index: 20;
+  left: 0; right: 0;
+  height: 14px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+}
+.coord-top    { top: 56px; }
+.coord-bottom { bottom: 0; }
+.coord-bar .tick {
+  position: relative;
+  padding-left: 12px;
+}
+.coord-bar .tick::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 6px; height: 1px;
+  background: var(--tactical);
+  transform: translateY(-50%);
+}
+
+/* ============================================================
+   SCHEMATIC BLOCK — the base container for all content panels
+   ============================================================ */
+.schematic-block {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(14,15,18,0.92), rgba(10,10,12,0.92));
+  border: 1px solid var(--tactical);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,102,0.04),
+    0 0 24px rgba(0,0,0,0.6);
+}
+/* schematic corner brackets */
+.schematic-block::before,
+.schematic-block::after {
+  content: "";
+  position: absolute;
+  width: 10px; height: 10px;
+  border: 1px solid var(--term);
+  box-shadow: var(--glow);
+  pointer-events: none;
+}
+.schematic-block::before { top: -1px; left: -1px;  border-right: 0; border-bottom: 0; }
+.schematic-block::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+/* ============================================================
+   CENTRAL TIMELINE AXIS
+   ============================================================ */
+.timeline-axis {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 0;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+.timeline-axis-core {
+  position: absolute;
+  inset: 0 0 0 0;
+  width: 1px;
+  margin: 0 auto;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--term) 0,
+    var(--term) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  box-shadow: 0 0 6px rgba(0, 255, 102, 0.6);
+}
+/* flowing energy pulse along the axis */
+.timeline-axis-flow {
+  position: absolute;
+  inset: 0;
+  width: 2px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, transparent, var(--term), transparent);
+  background-size: 100% 30vh;
+  opacity: 0.7;
+  filter: blur(1px);
+  animation: axis-flow 6s linear infinite;
+}
+@keyframes axis-flow {
+  0%   { background-position: 0 -30vh; }
+  100% { background-position: 0 100vh; }
+}
+
+/* ============================================================
+   ERA SHEET — alternating left/right around the central axis
+   ============================================================ */
+.era-sheet {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 5rem;
+  display: flex;
+  align-items: stretch;
+}
+.era-card { width: 100%; }
+
+/* On large screens, split sheets to alternate sides of the axis */
+@media (min-width: 1024px) {
+  .era-sheet { padding-left: 0; padding-right: 0; }
+  .era-left  { justify-content: flex-start; }
+  .era-right { justify-content: flex-end; }
+
+  .era-left  .era-card { width: calc(50% - 3rem); margin-right: auto; }
+  .era-right .era-card { width: calc(50% - 3rem); margin-left: auto; }
+
+  /* axis node sits at the 50% line */
+  .era-node { left: 50%; transform: translateX(-50%); }
+}
+
+/* axis node (connector dot on the timeline) */
+.era-node {
+  position: absolute;
+  top: 2.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 18px;
+  display: grid; place-items: center;
+  z-index: 3;
+}
+.era-node-core {
+  width: 10px; height: 10px;
+  border: 1px solid var(--term);
+  background: var(--ink);
+  box-shadow: var(--glow);
+  transform: rotate(45deg);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+/* on small screens hide the floating node (no central axis space) */
+@media (max-width: 1023px) {
+  .era-node { display: none; }
+}
+
+/* ============================================================
+   ERA CARD INTERNAL STRUCTURE
+   ============================================================ */
+.era-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px dashed var(--tactical);
+  background: linear-gradient(90deg, rgba(0,255,102,0.04), transparent);
+}
+.era-header-r { text-align: right; }
+
+.era-tag {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ash);
+  border: 1px solid var(--tactical);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.era-title {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--term);
+  text-shadow: 0 0 12px rgba(0,255,102,0.25);
+}
+.era-subtitle {
+  margin-top: 0.25rem;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fog);
+  opacity: 0.95;
+}
+.coord-tick {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+}
+.coord-tick:first-child { color: var(--tactical); }
+
+.era-body { padding: 1.25rem; }
+
+.era-prose p { margin: 0; }
+.era-meta {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+}
+.era-meta > div {
+  border: 1px solid var(--tactical);
+  padding: 0.4rem 0.5rem;
+  background: rgba(0,255,102,0.02);
+}
+.era-meta dt { color: var(--ash); text-transform: uppercase; }
+.era-meta dd { margin: 0.15rem 0 0; color: var(--fog); font-weight: 500; }
+
+.era-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  border-top: 1px dashed var(--tactical);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--ash);
+}
+.era-path-dash {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(to right, var(--tactical) 0 6px, transparent 6px 12px);
+}
+.era-path-label { color: var(--tactical); }
+
+/* ============================================================
+   WIDGET SLOTS — placeholders for Phase 02 interactive widgets
+   ============================================================ */
+.widget-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  border: 1px dashed var(--tactical);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,255,102,0.015) 0 8px,
+      transparent 8px 16px
+    );
+}
+.widget-slot-label {
+  position: absolute;
+  top: -1px; left: 1rem;
+  transform: translateY(-50%);
+  background: var(--ink);
+  padding: 0 6px;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--tactical);
+}
+.widget-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 1.5rem;
+}
+.widget-placeholder-id {
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--ash);
+  border: 1px solid var(--ash);
+  padding: 0.4rem 0.8rem;
+}
+.widget-placeholder-note {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ash);
+  opacity: 0.95;
+}
+
+/* ---- Widget expand-on-click -------------------------------- */
+/* Clicking a widget slot expands it for better visibility; the
+   era body restacks so the widget leads and the prose drops below.
+   The slot collapses again once it scrolls out of view. */
+.widget-slot {
+  cursor: zoom-in;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, min-height 0.3s ease;
+}
+/* expand / collapse affordance, top-right of the slot frame */
+.widget-slot::after {
+  content: "⊕ EXPAND";
+  position: absolute;
+  top: -1px; right: 0.75rem;
+  transform: translateY(-50%);
+  background: var(--ink);
+  padding: 0 6px;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--tactical);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.era-body { transition: gap 0.3s ease; }
+
+/* Expanded: card body becomes a single column, widget leads */
+.era-body.is-widget-expanded {
+  grid-template-columns: 1fr !important;
+}
+.era-body.is-widget-expanded .widget-slot {
+  order: 1;
+  min-height: 420px;
+  border-style: solid;
+  border-color: var(--term);
+  cursor: zoom-out;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,102,0.10),
+    0 0 28px rgba(0,255,102,0.10);
+}
+.era-body.is-widget-expanded .widget-slot::after {
+  content: "⊖ COLLAPSE";
+  color: var(--term);
+}
+.era-body.is-widget-expanded .widget-slot .widget-slot-label {
+  color: var(--term);
+}
+.era-body.is-widget-expanded .era-prose {
+  order: 2;
+}
+/* give the expanded schematic a little breathing room so it reads larger */
+.era-body.is-widget-expanded .widget-slot > :first-child {
+  margin-top: 0.5rem;
+}
+
+/* reveal-on-scroll: sheets start hidden, animate in */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.is-visible .era-node-core {
+  background: var(--term);
+  box-shadow: 0 0 14px rgba(0,255,102,0.6);
+}
+
+/* when an era is the active focus, brighten its schematic block */
+.era-card.is-active {
+  border-color: var(--term);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,255,102,0.1),
+    0 0 32px rgba(0,255,102,0.08);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+.animate-pulse-slow { animation: pulse-slow 2.4s ease-in-out infinite; }
+
+/* ---- Scrollbar (webkit) — keep the wireframe feel ---------- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); border-left: 1px solid var(--tactical); }
+::-webkit-scrollbar-thumb {
+  background: var(--tactical);
+  border: 2px solid var(--ink);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--term); }
+
+/* ---- Reduced motion --------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   WIDGET 01-A · THE WIREFRAME PERCEPTRON
+   ============================================================ */
+.widget-slot-active {
+  min-height: 0 !important;
+  border-style: solid;
+  border-color: var(--tactical);
+}
+
+/* The perceptron is an SVG schematic + an HTML control deck */
+.perc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.perc-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+/* SVG node + line styling (defaults; JS toggles state classes) */
+.perc line.sig {
+  stroke: var(--tactical);
+  stroke-width: 1.5;
+  transition: stroke 0.25s ease, stroke-width 0.25s ease, filter 0.25s ease;
+}
+.perc line.sig.active {
+  stroke: var(--term);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(0,255,102,0.7));
+}
+.perc line.sig.inactive {
+  stroke: var(--ash);
+  opacity: 0.55;
+}
+.perc .node-fill {
+  fill: var(--inkraise);
+  transition: fill 0.25s ease, stroke 0.25s ease, filter 0.3s ease;
+}
+.perc .node-stroke { stroke: var(--tactical); stroke-width: 1.5; }
+.perc text {
+  font-family: 'Share Tech Mono', 'JetBrains Mono', monospace;
+  fill: var(--fog);
+}
+.perc text.label { fill: var(--ash); font-size: 10px; letter-spacing: 0.15em; }
+.perc text.value { fill: var(--term); font-size: 13px; font-weight: 600; }
+
+/* summation node */
+.perc #sum-node .node-stroke { stroke: var(--term); }
+.perc #sum-node text.value { fill: var(--term); }
+
+/* output node states */
+.perc #output-node .node-fill { fill: var(--inkraise); }
+.perc #output-node .node-stroke { stroke: var(--tactical); transition: stroke 0.3s, filter 0.3s; }
+.perc #output-node text.value { fill: var(--fog); transition: fill 0.3s; }
+.perc #output-node.firing .node-fill {
+  fill: rgba(0,255,102,0.18);
+}
+.perc #output-node.firing .node-stroke {
+  stroke: var(--term);
+  filter: drop-shadow(0 0 10px rgba(0,255,102,0.85));
+}
+.perc #output-node.firing text.value { fill: var(--term); }
+
+/* neon ripple — expanding ring emitted while firing */
+.perc .ripple {
+  fill: none;
+  stroke: var(--term);
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: perc-ripple 1.1s ease-out infinite;
+}
+.perc #output-node:not(.firing) .ripple { animation: none; opacity: 0; }
+@keyframes perc-ripple {
+  0%   { r: 14px; opacity: 0.8; stroke-width: 2; }
+  100% { r: 40px; opacity: 0;   stroke-width: 0.5; }
+}
+
+/* threshold gate line */
+.perc line.threshold {
+  stroke: var(--ash);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.perc .threshold-label { fill: var(--ash); font-size: 9px; letter-spacing: 0.15em; }
+
+/* ---- Control deck ----------------------------------------- */
+.perc-controls {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px dashed var(--tactical);
+  background: rgba(0,255,102,0.02);
+}
+.perc-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+.perc-row-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ash);
+  white-space: nowrap;
+}
+.perc-readout {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--term);
+  min-width: 3.5rem;
+  text-align: right;
+}
+
+/* toggle switch (binary input) */
+.perc-toggle {
+  position: relative;
+  width: 46px;
+  height: 22px;
+  border: 1px solid var(--tactical);
+  border-radius: 2px;
+  background: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.perc-toggle::before {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 16px;
+  background: var(--ash);
+  transition: transform 0.2s ease, background 0.2s, box-shadow 0.2s;
+}
+.perc-toggle[aria-checked="true"] {
+  border-color: var(--term);
+  box-shadow: 0 0 8px rgba(0,255,102,0.35);
+}
+.perc-toggle[aria-checked="true"]::before {
+  transform: translateX(26px);
+  background: var(--term);
+  box-shadow: 0 0 8px rgba(0,255,102,0.7);
+}
+.perc-toggle-val {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  font-size: 9px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--ash);
+  pointer-events: none;
+}
+.perc-toggle-val.off { left: 8px; }
+.perc-toggle-val.on  { right: 8px; color: var(--term); display: none; }
+.perc-toggle[aria-checked="true"] .perc-toggle-val.off { display: none; }
+.perc-toggle[aria-checked="true"] .perc-toggle-val.on  { display: block; }
+
+/* range slider — wireframe styled */
+.perc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, var(--tactical) 0%, var(--tactical) 100%);
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.perc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px; height: 16px;
+  background: var(--term);
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 8px rgba(0,255,102,0.7);
+  cursor: grab;
+}
+.perc-range::-moz-range-thumb {
+  width: 12px; height: 16px;
+  background: var(--term);
+  border: 1px solid var(--ink);
+  box-shadow: 0 0 8px rgba(0,255,102,0.7);
+  cursor: grab;
+}
+.perc-range:active::-webkit-slider-thumb { cursor: grabbing; }
+
+/* numeric sum/threshold badges */
+.perc-badge {
+  display: inline-block;
+  border: 1px solid var(--tactical);
+  padding: 0.15rem 0.4rem;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--fog);
+  font-family: 'Share Tech Mono', monospace;
+}
+.perc-badge.eq { color: var(--term); border-color: var(--term); }
+
+/* ============================================================
+   WIDGET 02-A · THE VANISHING GRADIENT LOOP
+   ============================================================ */
+.vg {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.vg-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+/* node blocks */
+.vg .node-rect {
+  fill: var(--inkraise);
+  stroke: var(--tactical);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, fill 0.3s ease, filter 0.3s ease;
+}
+.vg .node-label { fill: var(--ash); font-size: 9px; letter-spacing: 0.15em; font-family: 'Share Tech Mono', monospace; }
+.vg .node-h     { fill: var(--fog); font-size: 12px; font-weight: 600; font-family: 'Share Tech Mono', monospace; transition: fill 0.3s; }
+.vg .node-word  { fill: var(--ash); font-size: 10px; font-family: 'JetBrains Mono', monospace; opacity: 0; transition: opacity 0.3s, fill 0.3s; }
+.vg .node-word.shown { opacity: 1; }
+
+.vg .conn {
+  stroke: var(--tactical);
+  stroke-width: 1.5;
+  transition: stroke 0.3s ease, filter 0.3s ease;
+}
+.vg .recur { stroke: var(--ash); stroke-width: 1; stroke-dasharray: 2 3; fill: none; opacity: 0.5; }
+.vg .loopback { stroke: var(--tactical); stroke-width: 1; stroke-dasharray: 4 4; fill: none; opacity: 0.6; }
+.vg .axis-note { fill: var(--ash); font-size: 8px; letter-spacing: 0.2em; font-family: 'Share Tech Mono', monospace; }
+
+/* traveling data pulse dot */
+.vg .pulse-dot { will-change: transform; }
+.vg .pulse-dot circle {
+  fill: var(--term);
+  transition: fill 0.3s ease, r 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(0,255,102,0.8));
+}
+
+/* control deck */
+.vg-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px dashed var(--tactical);
+  background: rgba(0,255,102,0.02);
+}
+.vg-readout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.vg-readout-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.vg-readout-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--term);
+  transition: color 0.3s;
+}
+.vg-cells {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+}
+.vg-cell {
+  border: 1px solid var(--tactical);
+  padding: 0.3rem 0.2rem;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--ash);
+  background: rgba(0,255,102,0.02);
+  transition: color 0.3s, border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.vg-cell.passed {
+  color: var(--term);
+  border-color: var(--term);
+  box-shadow: 0 0 6px rgba(0,255,102,0.25);
+}
+/* dim cells (deeper nodes) use a progressively dimmer green */
+.vg-cell.dim { color: var(--fog); border-color: var(--tactical); }
+.vg-actions { display: flex; gap: 0.5rem; align-items: center; }
+.vg-btn {
+  flex: 1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--term);
+  background: rgba(0,255,102,0.04);
+  border: 1px solid var(--term);
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.vg-btn:hover { background: rgba(0,255,102,0.12); box-shadow: 0 0 10px rgba(0,255,102,0.3); }
+.vg-btn:disabled { color: var(--ash); border-color: var(--tactical); cursor: not-allowed; box-shadow: none; background: transparent; }
+.vg-btn.ghost { color: var(--fog); border-color: var(--tactical); background: transparent; flex: 0 0 auto; }
+.vg-btn.ghost:hover { color: var(--term); border-color: var(--term); background: rgba(0,255,102,0.06); }
+.vg-caption {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+  min-height: 1.2em;
+}
+.vg-caption.warn { color: var(--term); }
+
+/* reduced-motion: snap transitions off so the stream plays quickly */
+.vg-svg.reduced * { transition: none !important; }
+
+/* ============================================================
+   WIDGET 03-A · VECTOR MATH SPACE
+   ============================================================ */
+.vm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.vm-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+/* grid + axes */
+.vm .grid-line { stroke: rgba(0,255,102,0.06); stroke-width: 1; }
+.vm .grid-major { stroke: rgba(0,255,102,0.12); stroke-width: 1; }
+.vm .axis { stroke: var(--tactical); stroke-width: 1; }
+.vm .tick-text { fill: var(--ash); font-size: 8px; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; }
+.vm .axis-label { fill: var(--fog); font-size: 9px; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.2em; }
+.vm .frame-note { fill: var(--ash); font-size: 8px; letter-spacing: 0.2em; font-family: 'Share Tech Mono', monospace; }
+
+/* origin crosshair */
+.vm .origin-cross { stroke: var(--term); stroke-width: 1; }
+
+/* reference vectors (Man / Woman from origin) — faint dotted */
+.vm .ref-vec {
+  stroke: var(--ash);
+  stroke-width: 1;
+  stroke-dasharray: 1.5 3;
+  opacity: 0.55;
+}
+.vm .ref-label { fill: var(--ash); font-size: 9px; font-family: 'Share Tech Mono', monospace; }
+
+/* construction vectors */
+.vm .vec {
+  stroke-width: 2;
+  fill: none;
+}
+.vm .vec-king {
+  stroke: var(--term);
+  filter: drop-shadow(0 0 4px rgba(0,255,102,0.7));
+}
+.vm .vec-sub {
+  stroke: var(--fog);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.vm .vec-add {
+  stroke: var(--term);
+  filter: drop-shadow(0 0 5px rgba(0,255,102,0.8));
+}
+
+/* point markers + labels */
+.vm .pt-label {
+  fill: var(--fog);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.vm .pt-label.shown { opacity: 1; }
+.vm .pt-label.king { fill: var(--term); }
+.vm .pt-label.queen { fill: var(--term); }
+.vm .pt-label.mid { fill: var(--fog); font-size: 9px; font-weight: 400; }
+
+.vm .pt-dot {
+  fill: var(--term);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.vm .pt-dot.shown { opacity: 1; }
+
+/* Queen target + radar ping */
+.vm #queen-target {
+  fill: none;
+  stroke: var(--ash);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  opacity: 0.5;
+  transition: stroke 0.4s, opacity 0.4s;
+}
+.vm #queen.found #queen-target {
+  stroke: var(--term);
+  opacity: 1;
+}
+.vm .ping {
+  fill: none;
+  stroke: var(--term);
+  stroke-width: 1.5;
+  opacity: 0;
+}
+.vm #queen.found .ping {
+  animation: vm-ping 1.8s ease-out infinite;
+}
+.vm #queen.found .ping.p2 { animation-delay: 0.6s; }
+.vm #queen.found .ping.p3 { animation-delay: 1.2s; }
+@keyframes vm-ping {
+  0%   { r: 6px;  opacity: 0.85; stroke-width: 2; }
+  100% { r: 38px; opacity: 0;    stroke-width: 0.5; }
+}
+
+/* control deck */
+.vm-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px dashed var(--tactical);
+  background: rgba(0,255,102,0.02);
+}
+.vm-equation {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--ash);
+  text-align: center;
+  min-height: 1.4em;
+}
+.vm-equation .op { color: var(--fog); }
+.vm-equation .res { color: var(--term); font-weight: 600; }
+.vm-equation .match {
+  color: var(--term);
+  font-size: 10px;
+  border: 1px solid var(--term);
+  padding: 0 0.3rem;
+  margin-left: 0.3rem;
+  box-shadow: 0 0 6px rgba(0,255,102,0.3);
+}
+.vm-actions { display: flex; gap: 0.5rem; }
+.vm-btn {
+  flex: 1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--term);
+  background: rgba(0,255,102,0.04);
+  border: 1px solid var(--term);
+  padding: 0.55rem 0.6rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.vm-btn:hover { background: rgba(0,255,102,0.12); box-shadow: 0 0 10px rgba(0,255,102,0.3); }
+.vm-btn:disabled { color: var(--ash); border-color: var(--tactical); cursor: not-allowed; box-shadow: none; background: transparent; }
+.vm-btn.ghost { color: var(--fog); border-color: var(--tactical); background: transparent; flex: 0 0 auto; }
+.vm-btn.ghost:hover { color: var(--term); border-color: var(--term); background: rgba(0,255,102,0.06); }
+.vm-legend {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+}
+.vm-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.vm-legend i { display: inline-block; width: 16px; height: 0; }
+.vm-legend .lg-solid { border-top: 2px solid var(--term); box-shadow: 0 0 4px rgba(0,255,102,0.6); }
+.vm-legend .lg-dash  { border-top: 1.5px dashed var(--fog); }
+.vm-legend .lg-ref   { border-top: 1px dotted var(--ash); }
+
+/* ============================================================
+   WIDGET 04-A · THE SELF-ATTENTION MATRIX
+   ============================================================ */
+.attn { display: flex; flex-direction: column; width: 100%; }
+.attn-canvas {
+  position: relative;
+  padding-top: 58px;            /* arch space above the sentence */
+  padding-bottom: 6px;
+  margin: 0 0.25rem;
+}
+.attn-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.attn-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fog);
+  position: relative;
+  z-index: 1;
+}
+.attn-token {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.attn-token.src {
+  color: var(--term);
+  border-color: var(--term);
+  box-shadow: 0 0 8px rgba(0,255,102,0.35);
+  cursor: crosshair;
+  font-weight: 600;
+}
+.attn-token.tgt { color: var(--fog); border-color: var(--tactical); }
+.attn-token.lit.animal { color: var(--term); border-color: var(--term); box-shadow: 0 0 10px rgba(0,255,102,0.6); }
+.attn-token.lit.street { color: var(--ash); border-color: var(--ash); }
+
+.attn-line { fill: none; stroke-linecap: round; }
+.attn-line.thick {
+  stroke: var(--term);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 5px rgba(0,255,102,0.85));
+  animation: attn-pulse 1.6s ease-in-out infinite;
+}
+.attn-line.thin {
+  stroke: var(--ash);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.7;
+}
+@keyframes attn-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+.attn-dot { fill: var(--term); }
+.attn-dot.bright { filter: drop-shadow(0 0 6px rgba(0,255,102,0.9)); animation: attn-pulse 1.6s ease-in-out infinite; }
+.attn-dot.dim { fill: var(--ash); opacity: 0.7; }
+
+.attn-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px dashed var(--tactical);
+  background: rgba(0,255,102,0.02);
+}
+.attn-readout {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--ash);
+  font-family: 'Share Tech Mono', monospace;
+}
+.attn-readout b { color: var(--term); }
+.attn-weights { display: flex; flex-direction: column; gap: 0.35rem; }
+.attn-wrow {
+  display: grid;
+  grid-template-columns: 7rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--fog);
+}
+.attn-wbar {
+  height: 8px;
+  border: 1px solid var(--tactical);
+  background: rgba(0,255,102,0.03);
+  overflow: hidden;
+}
+.attn-wbar i {
+  display: block;
+  height: 100%;
+  background: var(--term);
+  box-shadow: 0 0 6px rgba(0,255,102,0.5);
+  transition: width 0.3s ease;
+}
+.attn-wrow.dim .attn-wbar i { background: var(--ash); box-shadow: none; }
+.attn-wrow .pct { text-align: right; color: var(--term); }
+.attn-wrow.dim .pct { color: var(--ash); }
+
+/* ============================================================
+   WIDGET 05-A · THE TOKEN PREDICTOR & REWARD LOOP
+   ============================================================ */
+.llm { display: grid; grid-template-columns: 1fr; gap: 0.6rem; width: 100%; }
+@media (min-width: 640px) { .llm { grid-template-columns: 1.8fr 1fr; } }
+
+.llm-main { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+
+.llm-prompt {
+  display: flex;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+.llm-input {
+  flex: 1;
+  min-width: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--term);
+  background: var(--ink);
+  border: 1px solid var(--tactical);
+  padding: 0.45rem 0.6rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.llm-input:focus { border-color: var(--term); box-shadow: 0 0 8px rgba(0,255,102,0.3); }
+.llm-input::placeholder { color: var(--ash); }
+
+.llm-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--term);
+  background: rgba(0,255,102,0.04);
+  border: 1px solid var(--term);
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.llm-btn:hover { background: rgba(0,255,102,0.12); box-shadow: 0 0 10px rgba(0,255,102,0.3); }
+.llm-btn:disabled { color: var(--ash); border-color: var(--tactical); cursor: not-allowed; box-shadow: none; background: transparent; }
+
+.llm-terminal {
+  border: 1px solid var(--tactical);
+  background: var(--ink);
+  padding: 0.6rem 0.75rem;
+  min-height: 130px;
+  max-height: 180px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  position: relative;
+}
+.llm-terminal::before {
+  content: "LLM // STREAM";
+  position: absolute;
+  top: -1px; left: 0.6rem;
+  transform: translateY(-50%);
+  background: var(--ink);
+  padding: 0 0.4rem;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: var(--tactical);
+}
+.llm-prompt-line { color: var(--ash); }
+.llm-prompt-line .ps1 { color: var(--term); }
+.llm-output { color: var(--term); text-shadow: 0 0 6px rgba(0,255,102,0.25); word-break: break-word; }
+.llm-output .tk { white-space: pre-wrap; }
+.llm-cursor {
+  display: inline-block;
+  width: 7px; height: 14px;
+  background: var(--term);
+  vertical-align: -2px;
+  margin-left: 1px;
+  animation: llm-blink 1s steps(1) infinite;
+}
+.llm-cursor.idle { animation: none; opacity: 0.5; }
+@keyframes llm-blink { 50% { opacity: 0; } }
+
+.llm-reward {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px dashed var(--tactical);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--ash);
+}
+.llm-reward .lbl { color: var(--fog); }
+.llm-thumb {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--fog);
+  background: transparent;
+  border: 1px solid var(--tactical);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.llm-thumb:hover { color: var(--term); border-color: var(--term); box-shadow: 0 0 8px rgba(0,255,102,0.3); }
+.llm-thumb.good.active { color: var(--term); border-color: var(--term); box-shadow: 0 0 8px rgba(0,255,102,0.4); }
+.llm-thumb.bad.active  { color: var(--ash); border-color: var(--ash); }
+.llm-reward-val { margin-left: auto; color: var(--term); }
+
+/* sidebar */
+.llm-sidebar {
+  border: 1px solid var(--tactical);
+  background: rgba(0,255,102,0.02);
+  padding: 0.6rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.llm-side-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--tactical);
+  display: flex;
+  justify-content: space-between;
+}
+.llm-side-label .step { color: var(--ash); }
+.llm-bars { display: flex; flex-direction: column; gap: 0.45rem; }
+.llm-bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+}
+.llm-bar .row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--fog);
+}
+.llm-bar .tok { color: var(--term); }
+.llm-bar.alt .tok { color: var(--ash); }
+.llm-bar.alt .pct { color: var(--ash); }
+.llm-bar .pct { color: var(--term); }
+.llm-bar .track {
+  height: 8px;
+  border: 1px solid var(--tactical);
+  background: rgba(0,255,102,0.03);
+  overflow: hidden;
+}
+.llm-bar .fill {
+  display: block;
+  height: 100%;
+  background: var(--term);
+  box-shadow: 0 0 6px rgba(0,255,102,0.5);
+  width: 0;
+  transition: width 0.25s ease;
+}
+.llm-bar.alt .fill { background: var(--ash); box-shadow: none; }
+

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Blueprint of Intelligence: From Logic Gates to LLMs</title>
+  <meta name="description" content="A technical schematic timeline documenting the history of language modeling and AI — from the Perceptron to the LLM." />
+
+  <!-- Monospace technical typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind via CDN (Phase 1 scaffolding; swap for build pipeline in later phase) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:      '#0A0A0C',   // matte black / ultra-dark charcoal
+            inkraise: '#0E0F12',  // raised panel surface
+            term:     '#00FF66',  // vibrant terminal green
+            tactical: '#246B41',  // muted tactical green (raised for legibility)
+            fog:      '#7DBA9A',  // dimmed green for body text
+            ash:      '#5A7268',  // structural / disabled green (raised for legibility)
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Fira Code', 'Share Tech Mono', 'monospace'],
+            schem: ['Share Tech Mono', 'JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="bg-ink text-fog font-mono antialiased selection:bg-term/30 selection:text-term">
+
+  <!-- ============================================================= -->
+  <!-- LOADING SCREEN — AI chatbot prompt page                        -->
+  <!-- ============================================================= -->
+  <div id="loader" class="loader" role="dialog" aria-label="Loading">
+    <div class="loader-inner">
+      <div class="loader-eyebrow">DOC // REV 01 · INITIALIZING</div>
+      <h1 class="loader-title">What do you want to learn?</h1>
+      <div class="loader-chatbox" id="loader-chatbox">
+        <span class="loader-prompt">&gt;</span>
+        <span class="loader-placeholder" id="loader-placeholder">Ask anything</span>
+        <span class="loader-text" id="loader-text"></span><span class="loader-cursor" id="loader-cursor" aria-hidden="true"></span>
+      </div>
+      <div class="loader-hint" id="loader-hint">PRESS <span class="key">ENTER</span> TO CONTINUE</div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- GLOBAL OVERLAY: blueprint grid, crosshairs, coordinate frame   -->
+  <!-- ============================================================= -->
+  <div class="blueprint-grid" aria-hidden="true"></div>
+
+  <!-- Faint animated neural network (background atmosphere) -->
+  <canvas id="neural-bg" class="neural-bg" aria-hidden="true"></canvas>
+
+  <!-- Fixed corner crosshairs (viewport) -->
+  <div class="crosshair crosshair-tl" aria-hidden="true"></div>
+  <div class="crosshair crosshair-tr" aria-hidden="true"></div>
+  <div class="crosshair crosshair-bl" aria-hidden="true"></div>
+  <div class="crosshair crosshair-br" aria-hidden="true"></div>
+
+  <!-- Fixed top + bottom coordinate tick bars -->
+  <div id="coord-top" class="coord-bar coord-top" aria-hidden="true"></div>
+  <div id="coord-bottom" class="coord-bar coord-bottom" aria-hidden="true"></div>
+
+  <!-- Scanline / vignette atmosphere -->
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <!-- ============================================================= -->
+  <!-- HEADER: title plate + system status                            -->
+  <!-- ============================================================= -->
+  <header class="fixed top-0 inset-x-0 z-40 border-b border-tactical/60 bg-ink/80 backdrop-blur-sm">
+    <div class="mx-auto max-w-[1400px] px-6 py-3 flex items-center justify-between gap-6">
+      <!-- Identifier block -->
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="inline-block h-2 w-2 rounded-full bg-term shadow-[0_0_8px_#00FF66] animate-pulse-slow shrink-0"></span>
+        <div class="min-w-0">
+          <div class="text-[10px] uppercase tracking-[0.3em] text-ash">DOC // REV 01 // PHASE 01</div>
+          <h1 class="truncate text-sm sm:text-base font-semibold text-term tracking-wide">
+            THE BLUEPRINT OF INTELLIGENCE
+          </h1>
+        </div>
+      </div>
+
+      <!-- Right-side system readout -->
+      <div class="hidden md:flex items-center gap-5 text-[10px] uppercase tracking-[0.25em] text-ash">
+        <span>STATUS: <span class="text-term">ONLINE</span></span>
+        <span class="text-tactical">|</span>
+        <span>SCALE: 1:1</span>
+        <span class="text-tactical">|</span>
+        <span>UNITS: <span class="text-fog">LOGICAL</span></span>
+      </div>
+
+      <!-- Era index (mobile compact) -->
+      <nav class="md:hidden text-[10px] uppercase tracking-[0.2em] text-ash">
+        <span class="text-term">5</span>/5 ERAS
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================================================= -->
+  <!-- MAIN: central timeline axis + 5 schematic era sheets           -->
+  <!-- ============================================================= -->
+  <main class="relative mx-auto max-w-[1400px] px-6 pt-24 pb-32">
+
+    <!-- Central vertical timeline axis (decorative structural line) -->
+    <div class="timeline-axis" aria-hidden="true">
+      <div class="timeline-axis-core"></div>
+      <div class="timeline-axis-flow"></div>
+    </div>
+
+    <!-- Era index legend -->
+    <section class="relative z-10 mb-16 sm:mb-24">
+      <div class="schematic-block p-5 sm:p-7">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div class="text-[10px] uppercase tracking-[0.3em] text-ash">SHEET 00 / OVERVIEW</div>
+            <h2 class="mt-2 text-xl sm:text-2xl font-semibold text-term leading-tight">
+              The Blueprint of Intelligence
+            </h2>
+            <p class="mt-1 text-sm text-fog/80">
+              From Logic Gates to LLMs — a continuous technical schematic across five eras.
+            </p>
+          </div>
+          <div class="text-[10px] uppercase tracking-[0.25em] text-ash text-right">
+            <div>AXIS: TEMPORAL</div>
+            <div>RANGE: 1950 → PRESENT</div>
+            <div>SEGMENTS: <span class="text-term">05</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- ERA 01 — The Architecture of Logic (1950s)                   -->
+    <!-- =========================================================== -->
+    <section id="era-01" class="era-sheet era-left" data-era="01" data-year="1950s">
+      <div class="era-node" aria-hidden="true">
+        <span class="era-node-core"></span>
+      </div>
+
+      <article class="schematic-block era-card">
+        <header class="era-header">
+          <div class="era-header-l">
+            <span class="era-tag">ERA 01</span>
+            <h3 class="era-title">The Architecture of Logic</h3>
+            <p class="era-subtitle">1950s — The birth of the artificial neuron</p>
+          </div>
+          <div class="era-header-r">
+            <div class="coord-tick">[X: 04, Y: 50]</div>
+            <div class="coord-tick">NODE // PRCP-01</div>
+          </div>
+        </header>
+
+        <div class="era-body grid gap-6 md:grid-cols-2">
+          <div class="era-prose">
+            <p class="text-sm leading-relaxed text-fog/85">
+              The first schematic of machine thought: a single weighted node
+              deciding between 0 and 1. The Perceptron partitions space with a
+              hyperplane — intelligence reduced to summation and a threshold.
+            </p>
+          </div>
+
+          <!-- WIDGET SLOT — Era 01 (Perceptron) -->
+          <div class="widget-slot widget-slot-active" data-widget="perceptron">
+            <div class="widget-slot-label">WIDGET // 01-A · PERCEPTRON</div>
+            <!-- perceptron mounts here (era-01-perceptron.js) -->
+          </div>
+        </div>
+
+        <footer class="era-footer">
+          <span class="era-path-dash"></span>
+          <span class="era-path-label">PATH → ERA 02</span>
+        </footer>
+      </article>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- ERA 02 — The Hidden Layers (1980s–90s)                       -->
+    <!-- =========================================================== -->
+    <section id="era-02" class="era-sheet era-right" data-era="02" data-year="1980s–90s">
+      <div class="era-node" aria-hidden="true">
+        <span class="era-node-core"></span>
+      </div>
+
+      <article class="schematic-block era-card">
+        <header class="era-header">
+          <div class="era-header-l">
+            <span class="era-tag">ERA 02</span>
+            <h3 class="era-title">The Hidden Layers &amp; Sequential Text</h3>
+            <p class="era-subtitle">1980s–90s — Backpropagation, RNNs &amp; the vanishing gradient</p>
+          </div>
+          <div class="era-header-r">
+            <div class="coord-tick">[X: 12, Y: 63]</div>
+            <div class="coord-tick">NODE // RNN-02</div>
+          </div>
+        </header>
+
+        <div class="era-body grid gap-6 md:grid-cols-2">
+          <div class="widget-slot" data-widget="vanishing-gradient">
+            <div class="widget-slot-label">WIDGET SLOT // 02-A</div>
+            <div class="widget-placeholder">
+              <span class="widget-placeholder-id">[ VANISHING GRADIENT ]</span>
+              <span class="widget-placeholder-note">animating depth / fading signal — pending phase 02</span>
+            </div>
+          </div>
+
+          <div class="era-prose">
+            <p class="text-sm leading-relaxed text-fog/85">
+              Backpropagation made deep networks trainable, and Recurrent Neural
+              Networks extended them to <span class="text-term">streams of text</span> —
+              a hidden state passed token by token through time. But the same
+              depth that gave power also drained the learning signal: each
+              backward step multiplied the gradient by a fraction, and fractions
+              compounded into silence. Early layers — early words — were
+              forgotten. The model lost long-term context.
+            </p>
+          </div>
+        </div>
+
+        <footer class="era-footer">
+          <span class="era-path-dash"></span>
+          <span class="era-path-label">PATH → ERA 03</span>
+        </footer>
+      </article>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- ERA 03 — The Geometry of Words (2013)                        -->
+    <!-- =========================================================== -->
+    <section id="era-03" class="era-sheet era-left" data-era="03" data-year="2013">
+      <div class="era-node" aria-hidden="true">
+        <span class="era-node-core"></span>
+      </div>
+
+      <article class="schematic-block era-card">
+        <header class="era-header">
+          <div class="era-header-l">
+            <span class="era-tag">ERA 03</span>
+            <h3 class="era-title">The Geometry of Words</h3>
+            <p class="era-subtitle">2013 — Word embeddings & vector arithmetic</p>
+          </div>
+          <div class="era-header-r">
+            <div class="coord-tick">[X: 28, Y: 71]</div>
+            <div class="coord-tick">NODE // W2V-03</div>
+          </div>
+        </header>
+
+        <div class="era-body grid gap-6 md:grid-cols-2">
+          <div class="era-prose">
+            <p class="text-sm leading-relaxed text-fog/85">
+              In 2013, <span class="text-term">Word2Vec</span> collapsed meaning into
+              geometry. Each word was trained into a dense vector — a coordinate in a
+              ~300-dimensional semantic space — so that similar words landed near each
+              other and relations became directions. Gender, tense, and capital-city
+              offsets emerged as <em>translatable</em> arrows. Language was no longer
+              a list of symbols; it was spatial math you could add and subtract:
+              <span class="text-term">[King] − [Man] + [Woman] ≈ [Queen]</span>.
+            </p>
+          </div>
+
+          <div class="widget-slot" data-widget="word-vectors">
+            <div class="widget-slot-label">WIDGET SLOT // 03-A</div>
+            <div class="widget-placeholder">
+              <span class="widget-placeholder-id">[ VECTOR GRAPH ]</span>
+              <span class="widget-placeholder-note">interactive 2D embedding map — pending phase 02</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="era-footer">
+          <span class="era-path-dash"></span>
+          <span class="era-path-label">PATH → ERA 04</span>
+        </footer>
+      </article>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- ERA 04 — The Attention Breakthrough (2017)                   -->
+    <!-- =========================================================== -->
+    <section id="era-04" class="era-sheet era-right" data-era="04" data-year="2017">
+      <div class="era-node" aria-hidden="true">
+        <span class="era-node-core"></span>
+      </div>
+
+      <article class="schematic-block era-card">
+        <header class="era-header">
+          <div class="era-header-l">
+            <span class="era-tag">ERA 04</span>
+            <h3 class="era-title">The Attention Breakthrough</h3>
+            <p class="era-subtitle">2017 — Transformers & self-attention</p>
+          </div>
+          <div class="era-header-r">
+            <div class="coord-tick">[X: 41, Y: 83]</div>
+            <div class="coord-tick">NODE // TXF-04</div>
+          </div>
+        </header>
+
+        <div class="era-body grid gap-6 md:grid-cols-2">
+          <div class="widget-slot" data-widget="attention-matrix">
+            <div class="widget-slot-label">WIDGET SLOT // 04-A</div>
+            <div class="widget-placeholder">
+              <span class="widget-placeholder-id">[ ATTENTION MATRIX ]</span>
+              <span class="widget-placeholder-note">hover context-weight grid — pending phase 02</span>
+            </div>
+          </div>
+
+          <div class="era-prose">
+            <p class="text-sm leading-relaxed text-fog/85">
+              Sequence modeling is reframed as routing. Every token attends to every
+              other token; context weights form a matrix of relationships. Recurrence
+              is discarded in favor of parallel, weighted lookup.
+            </p>
+          </div>
+        </div>
+
+        <footer class="era-footer">
+          <span class="era-path-dash"></span>
+          <span class="era-path-label">PATH → ERA 05</span>
+        </footer>
+      </article>
+    </section>
+
+    <!-- =========================================================== -->
+    <!-- ERA 05 — The Scale & Alignment Era (Present)                -->
+    <!-- =========================================================== -->
+    <section id="era-05" class="era-sheet era-left" data-era="05" data-year="Present">
+      <div class="era-node" aria-hidden="true">
+        <span class="era-node-core"></span>
+      </div>
+
+      <article class="schematic-block era-card">
+        <header class="era-header">
+          <div class="era-header-l">
+            <span class="era-tag">ERA 05</span>
+            <h3 class="era-title">The Scale &amp; Alignment Era</h3>
+            <p class="era-subtitle">Present — LLMs, RLHF, and the human feedback loop</p>
+          </div>
+          <div class="era-header-r">
+            <div class="coord-tick">[X: 57, Y: 99]</div>
+            <div class="coord-tick">NODE // LLM-05</div>
+          </div>
+        </header>
+
+        <div class="era-body grid gap-6 md:grid-cols-2">
+          <div class="era-prose">
+            <p class="text-sm leading-relaxed text-fog/85">
+              Scale begets emergence. Tokens stream as probability distributions,
+              shaped by human preference into helpful, aligned output. The loop
+              closes: the machine now answers, and we grade the answer.
+            </p>
+          </div>
+
+          <div class="widget-slot" data-widget="llm-terminal">
+            <div class="widget-slot-label">WIDGET SLOT // 05-A</div>
+            <div class="widget-placeholder">
+              <span class="widget-placeholder-id">[ PROBABILITY TERMINAL ]</span>
+              <span class="widget-placeholder-note">live-typing token predictor + feedback — pending phase 02</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="era-footer">
+          <span class="era-path-dash"></span>
+          <span class="era-path-label">END OF SCHEMATIC</span>
+        </footer>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ============================================================= -->
+  <!-- FOOTER: revision / control panel                               -->
+  <!-- ============================================================= -->
+  <footer class="relative z-10 border-t border-tactical/60 bg-ink/60">
+    <div class="mx-auto max-w-[1400px] px-6 py-6 flex flex-wrap items-center justify-between gap-4 text-[10px] uppercase tracking-[0.25em] text-ash">
+      <div>BLUEPRINT // REV 01 // PHASE 01 — STRUCTURAL SHELL</div>
+      <div class="flex items-center gap-3">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-term shadow-[0_0_6px_#00FF66]"></span>
+        <span>WIDGETS: <span class="text-term">5</span> / 5 · <span class="text-term">COMPLETE</span></span>
+      </div>
+      <div>© <span class="text-fog">INTELLIGENCE SCHEMATIC</span></div>
+    </div>
+  </footer>
+
+  <script src="neural-bg.js"></script>
+  <script src="script.js"></script>
+  <script src="era-01-perceptron.js"></script>
+  <script src="era-02-vanishing-gradient.js"></script>
+  <script src="era-03-word-vectors.js"></script>
+  <script src="era-04-attention.js"></script>
+  <script src="era-05-llm-terminal.js"></script>
+</body>
+</html>
